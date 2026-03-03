@@ -60,7 +60,7 @@ bool SensorRead(uint32_t *pucSpeedValue)
 {
     bool blRet = true;
 
-    if(pucSpeedValue == NULL)        
+    if(pucSpeedValue == NULL)
     {
         blRet = false;                                   //req: SensorRead_LLR_2
     }
@@ -71,8 +71,8 @@ bool SensorRead(uint32_t *pucSpeedValue)
 
         //Comparing with assumed sensor max and min values
         
-        if(*pucSpeedValue > SPEED_SENSOR_MIN && *pucSpeedValue < 
-                                                            SPEED_SENSOR_MAX)
+        if((*pucSpeedValue >= SPEED_SENSOR_MIN) && (*pucSpeedValue <= 
+                                                            SPEED_SENSOR_MAX))
         {
             blRet = true;                                //req: SensorRead_LLR_1
         }
