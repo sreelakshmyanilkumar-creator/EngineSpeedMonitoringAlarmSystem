@@ -62,6 +62,10 @@ bool msleep(uint32_t ucTimeInMilliSeconds)
     {
         blRet = true;
     }
+    else
+    {
+        blRet = false;
+    }
 
     return blRet;
 }

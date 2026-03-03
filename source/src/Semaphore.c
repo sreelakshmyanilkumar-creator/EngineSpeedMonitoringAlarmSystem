@@ -65,6 +65,10 @@ bool SemaphoreInit()
     {
         blRet = true;
     }
+    else
+    {
+        blRet = false;
+    }
 
     return blRet;
 }
@@ -113,6 +117,10 @@ bool SemaphoreWait()
     {
         blRet = true;
     }
+    else
+    {
+        blRet = false;
+    }
 
     return blRet;
 }
@@ -160,6 +168,10 @@ bool SemaphorePost()
     if(sem_post(&lAlarmSemFlag) == 0)
     {
         blRet = true;
+    }
+    else
+    {
+        blRet = false;
     }
 
     return blRet;

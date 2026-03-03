@@ -124,6 +124,10 @@ bool AlarmSemaphoreInitialize()
     {
         blRet = true;
     }
+    else
+    {
+        blRet = false;
+    }
 
     return blRet;
 }
@@ -172,6 +176,10 @@ bool AlarmSemaphoreWait()
     {
         blRet = true;
     }
+    else
+    {
+        blRet = false;
+    }
 
     return blRet;
 }
@@ -219,6 +227,10 @@ bool AlarmSemaphorePost()
     if(SemaphorePost() == 0)
     {
         blRet = true;
+    }
+    else
+    {
+        blRet = false;
     }
 
     return blRet;

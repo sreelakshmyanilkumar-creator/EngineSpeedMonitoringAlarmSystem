@@ -58,15 +58,28 @@ INCLUDE FILES: Sensor.h
 */
 bool SensorRead(uint32_t *pucSpeedValue)
 {
-    bool blRet = false;
-    
-    *pucSpeedValue = (rand() % (SPEED_THRESHOLD_MAX - (SPEED_THRESHOLD_MIN) + 
-                    RANGE_ADJUST)) + (SPEED_THRESHOLD_MIN);
+    bool blRet = true;
 
-    //Comparing with assumed sensor max and min values
-    if(*pucSpeedValue > SPEED_SENSOR_MIN || *pucSpeedValue < SPEED_SENSOR_MAX)
+    if(pucSpeedValue == NULL)        
     {
-        blRet = true;
+        blRet = false;                                   //req: SensorRead_LLR_2
+    }
+    else
+    {
+        *pucSpeedValue = (rand() % (SPEED_THRESHOLD_MAX - (SPEED_THRESHOLD_MIN)+ 
+                                        RANGE_ADJUST)) + (SPEED_THRESHOLD_MIN);
+
+        //Comparing with assumed sensor max and min values
+        
+        if(*pucSpeedValue > SPEED_SENSOR_MIN && *pucSpeedValue < 
+                                                            SPEED_SENSOR_MAX)
+        {
+            blRet = true;                                //req: SensorRead_LLR_1
+        }
+        else
+        {
+            blRet = false;                               //req: SensorRead_LLR_3
+        }
     }
 
     return blRet;

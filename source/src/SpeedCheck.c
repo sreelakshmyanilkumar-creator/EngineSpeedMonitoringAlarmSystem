@@ -133,6 +133,10 @@ bool SpeedCheckMessageQueueCreate()
     {
         blRet = true;
     }
+    else
+    {
+        blRet = false;
+    }
 
     return blRet;
 }
@@ -177,13 +181,21 @@ bool SpeedCheckMessageQueueCreate()
 */
 bool SpeedCheckMessageQueueSend(uint32_t *pucMsgQSpeedData, size_t lMsgQSize)
 {
-    bool blRet = false;
+    bool blRet = true;
 
-    if(pucMsgQSpeedData != NULL)
+    if(pucMsgQSpeedData == NULL)
+    {
+        blRet = false;
+    }
+    else
     {
         if(MessageQueueSend(pucMsgQSpeedData, lMsgQSize) != false)
         {
             blRet = true;
+        }
+        else
+        {
+            blRet = false;
         }
     }
 
@@ -198,7 +210,7 @@ bool SpeedCheckMessageQueueSend(uint32_t *pucMsgQSpeedData, size_t lMsgQSize)
 * DESCRIPTION
 * This function is a wrapper function for MessageQueueReceive() 
 *
-* PARAMETERS
+* PARAMETERS:
 * \is
 * \i N/A
 * \ie
@@ -230,11 +242,22 @@ bool SpeedCheckMessageQueueSend(uint32_t *pucMsgQSpeedData, size_t lMsgQSize)
 */
 bool SpeedCheckMessageQueueReceive(uint32_t *pucMsgQSpeedData, size_t lMsgQSize)
 {
-    bool blRet = false;
+    bool blRet = true;
 
-    if(MessageQueueReceive(pucMsgQSpeedData , lMsgQSize) != false)
+    if(pucMsgQSpeedData == NULL)
     {
-        blRet = true;
+        blRet = false;
+    }
+    else
+    {
+        if(MessageQueueReceive(pucMsgQSpeedData , lMsgQSize) != false)
+        {
+            blRet = true;
+        }
+        else
+        {
+            blRet = false;
+        }   
     }
 
     return blRet;
@@ -288,21 +311,32 @@ bool SpeedCheckMessageQueueReceive(uint32_t *pucMsgQSpeedData, size_t lMsgQSize)
 bool SpeedCheckForThresholds(uint32_t *pucMsgQSpeedData, 
                             uint8_t *psucThresholdBreachCount)
 {
-    bool blRet = false;
+    bool blRet = true;
 
-    if(*pucMsgQSpeedData < SPEED_THRESHOLD_MIN || 
-        *pucMsgQSpeedData > SPEED_THRESHOLD_MAX)
+    if(pucMsgQSpeedData == NULL || psucThresholdBreachCount == NULL)
     {
-        (*psucThresholdBreachCount)++;
+        blRet = false;
     }
     else
     {
-        *psucThresholdBreachCount = 0;
-    }
+        if(*pucMsgQSpeedData < SPEED_THRESHOLD_MIN || 
+        *pucMsgQSpeedData > SPEED_THRESHOLD_MAX)
+        {
+            (*psucThresholdBreachCount)++;
+        }
+        else
+        {
+            *psucThresholdBreachCount = 0;
+        }
 
-    if(*psucThresholdBreachCount > MAX_BREACH_COUNT)
-    {
-        blRet = true;
+        if(*psucThresholdBreachCount > MAX_BREACH_COUNT)
+        {
+            blRet = true;
+        }
+        else
+        {
+            blRet = false;
+        }
     }
 
     return blRet;

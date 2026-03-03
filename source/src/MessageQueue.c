@@ -21,6 +21,9 @@ INCLUDE FILES: MessageQueue.h
 #include <sys/stat.h>
 #include "MessageQueue.h"
 
+/* locals */
+static mqd_t lSpeedMsgQueue = (mqd_t)MQ_ERROR;
+
 /*******************************************************************************
 *
 * MessageQueueCreate - The function [MessageQueueCreate] will create a message 
@@ -30,7 +33,7 @@ INCLUDE FILES: MessageQueue.h
 * The function [MessageQueueCreate] will create a message queue to send speed 
 * data from [SpeedReadThread] to [SpeedCheckThread]
 *
-* PARAMETERS
+* PARAMETERS:
 * \is
 * \i N/A
 * \ie
@@ -63,33 +66,27 @@ INCLUDE FILES: MessageQueue.h
 bool MessageQueueCreate()
 {
     bool blRet = false;
+
+    /*Message queue Configuration*/
     struct mq_attr stMsgQueueAttr = {0};
     stMsgQueueAttr.mq_flags = 0;
     stMsgQueueAttr.mq_maxmsg = MSG_QUEUE_MAX_MESSAGES;
     stMsgQueueAttr.mq_msgsize = MSG_QUEUE_MAX_MSG_SIZE;
     stMsgQueueAttr.mq_curmsgs = 0;
 
-    if(mq_unlink(QUEUE_NAME) == 0)
+    lSpeedMsgQueue = mq_open(QUEUE_NAME, O_CREAT | O_RDWR, PERMISSION_MASK, 
+                            &stMsgQueueAttr);
+
+    if(lSpeedMsgQueue != (mqd_t)MQ_ERROR)
     {
-        mqd_t lSpeedpMsgQueue = mq_open(QUEUE_NAME, O_CREAT | 
-                                O_RDWR, PERMISSION_MASK, 
-                                &stMsgQueueAttr);
-    
-        if (lSpeedpMsgQueue != (mqd_t)-1)
-        {
-            blRet = true;
-        }
-        else
-        {
-            printf("mq_open failed"); 
-        }
+        blRet = true;                                 //MessageQueueCreate_LLR_1
     }
     else
     {
-        printf("mq_unlink failed");
+        blRet = false;                                //MessageQueueCreate_LLR_2
     }
 
-        return blRet;
+    return blRet;
 }
 
 /*******************************************************************************
@@ -133,31 +130,23 @@ bool MessageQueueCreate()
 */
 bool MessageQueueSend(uint32_t *pucMessageQueueData, size_t lMsgQSize)
 {
-    bool blRet = false;
+    bool blRet = true;
 
-    if(pucMessageQueueData != NULL)
+    if(pucMessageQueueData == NULL)
     {
-        mqd_t lSpeedMsgQueue = mq_open(QUEUE_NAME, O_WRONLY);
-        
-        if (lSpeedMsgQueue == (mqd_t)-1)
-        {
-            printf("mq_open failed");
+        blRet = false;
+    }
+    else
+    {
+        if (mq_send(lSpeedMsgQueue, (const char*)pucMessageQueueData, 
+                    lMsgQSize, 0) == MQ_ERROR) 
+        { 
+            blRet = false;
         }
         else
         {
-            if (mq_send(lSpeedMsgQueue, (const char*)pucMessageQueueData, 
-                        lMsgQSize, 0) == -1) 
-            { 
-                printf("mq_send failed"); 
-                perror("mq_send failed");
-            }
-            else
-            {
-                blRet = true;
-            }
+            blRet = true;
         }
-
-        mq_close(lSpeedMsgQueue);
     }
 
     return blRet;
@@ -204,26 +193,24 @@ bool MessageQueueSend(uint32_t *pucMessageQueueData, size_t lMsgQSize)
 */
 bool MessageQueueReceive(uint32_t *pucMessageQueueData, size_t lMsgQSize)
 {
-    bool blRet = false;
+    bool blRet = true;
 
-    mqd_t lSpeedMsgQueue = mq_open(QUEUE_NAME, O_RDONLY);
-    
-    if (lSpeedMsgQueue == (mqd_t)-1)
+    if(pucMessageQueueData == NULL)
     {
-        printf("Producer mq_open failed");
+        blRet = false;
     }
-
-    if (mq_receive(lSpeedMsgQueue, (char*)pucMessageQueueData, lMsgQSize, 
-        NULL) == -1)
+    else
     {
-        printf("mq_receive failed");
-    } 
-    else 
-    { 
-        blRet = true;
+        if (mq_receive(lSpeedMsgQueue, (char*)pucMessageQueueData, lMsgQSize, 
+            NULL) == MQ_ERROR)
+        {
+            blRet = false;
+        } 
+        else 
+        { 
+            blRet = true;
+        }
     }
-
-    mq_close(lSpeedMsgQueue);
 
     return blRet;
 }

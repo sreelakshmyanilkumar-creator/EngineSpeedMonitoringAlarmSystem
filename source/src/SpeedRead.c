@@ -122,11 +122,22 @@ void* SpeedReadThread(void *pArg)
 */
 bool ReadSpeed(uint32_t *pucSpeedValue)
 {
-    bool blRet = false;
+    bool blRet = true;
 
-    if(pucSpeedValue != NULL)
+    if(pucSpeedValue == NULL)
     {
-        blRet = SensorRead(pucSpeedValue);
+        blRet = false;
+    }
+    else
+    {
+        if(SensorRead(pucSpeedValue) != true)
+        {
+            blRet = false;
+        }
+        else
+        {
+            blRet = true;
+        }
     }
 
     return blRet;

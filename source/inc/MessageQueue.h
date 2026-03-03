@@ -20,6 +20,7 @@ modification history ------------------
 #define MSG_QUEUE_MAX_MESSAGES  (10)
 #define MSG_QUEUE_MAX_MSG_SIZE  (sizeof(uint32_t))
 #define QUEUE_NAME              "/speedqueue"
+#define MQ_ERROR            (-1)
 
 /* function declarations */
 bool MessageQueueCreate();

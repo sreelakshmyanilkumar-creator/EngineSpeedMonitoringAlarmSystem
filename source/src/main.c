@@ -82,7 +82,7 @@ int main(void)
     }
     else
     {
-        printf("CreateThreads Failed\n");
+        lRet = FAILURE;
     }
     
     return lRet;
