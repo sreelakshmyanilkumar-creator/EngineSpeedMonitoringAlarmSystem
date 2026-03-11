@@ -30,5 +30,10 @@ pipeline {
         always {
             archiveArtifacts artifacts: '*.txt, source/build/*', allowEmptyArchive: true
         }
+        cleanup {
+            // This deletes the workspace folder on the server after archiving.
+            // This is the "Remove it" fix you asked for—it ensures no old files remain.
+            cleanWs()
+        }
     }
 }
