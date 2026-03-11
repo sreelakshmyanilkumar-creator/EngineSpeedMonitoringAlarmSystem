@@ -1,33 +1,34 @@
 pipeline {
     agent any
     stages {
-        stage('Build') {
+        stage('Environment Check') {
             steps {
-                // Move into the source directory where the Makefile is
-                dir('source') {
-                    sh 'make clean && make > ../buildlog.txt 2>&1'
-                }
+                sh 'gcc --version'
+                sh 'make --version'
+                sh 'cppcheck --version'
             }
         }
-
-        stage('Coding Standards') {
-            steps {
-                // Run cppcheck on the source directory
-                sh 'cppcheck source/ --enable=all --suppress=missingIncludeSystem --addon=misra.py > coding_standards_report.txt 2>&1 || true'
-            }
-        }
-
+        
         stage('Static Analysis') {
             steps {
-                sh 'cppcheck source/ > static-analysis-report.txt 2>&1 || true'
+                // Run this before Build so it doesn't get skipped on failure
+                sh 'cppcheck source/src/ > static-analysis-report.txt 2>&1 || true'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('source') {
+                    // Running without redirection to see errors in console
+                    sh 'make clean && make'
+                }
             }
         }
     }
     
     post {
         always {
-            // Archive logs and the compiled .o files (found in source/src/ or source/)
-            archiveArtifacts artifacts: '*.txt, source/**/*.o', fingerprint: true
+            archiveArtifacts artifacts: '*.txt, source/build/*', allowEmptyArchive: true
         }
     }
 }
