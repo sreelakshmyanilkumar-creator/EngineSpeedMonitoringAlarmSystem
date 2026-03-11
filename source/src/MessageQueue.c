@@ -21,6 +21,10 @@ INCLUDE FILES: MessageQueue.h
 #include <sys/stat.h>
 #include "MessageQueue.h"
 
+#ifndef UNIT_TEST
+#include "HltcMock.h"
+#endif
+
 /* locals */
 static mqd_t lSpeedMsgQueue = (mqd_t)MQ_ERROR;
 
@@ -74,9 +78,12 @@ bool MessageQueueCreate()
     stMsgQueueAttr.mq_msgsize = MSG_QUEUE_MAX_MSG_SIZE;
     stMsgQueueAttr.mq_curmsgs = 0;
 
+#ifndef UNIT_TEST
     lSpeedMsgQueue = mq_open(QUEUE_NAME, O_CREAT | O_RDWR, PERMISSION_MASK, 
                             &stMsgQueueAttr);
-
+#else
+    lSpeedMsgQueue = (mqd_t)mock_mq_open();
+#endif
     if(lSpeedMsgQueue != (mqd_t)MQ_ERROR)
     {
         blRet = true;                                 //MessageQueueCreate_LLR_1

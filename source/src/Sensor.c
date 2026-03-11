@@ -66,9 +66,12 @@ bool SensorRead(uint32_t *pucSpeedValue)
     }
     else
     {
+#ifndef UNIT_TEST
         *pucSpeedValue = (rand() % (SPEED_THRESHOLD_MAX - (SPEED_THRESHOLD_MIN)+ 
                                         RANGE_ADJUST)) + (SPEED_THRESHOLD_MIN);
-
+#else
+        printf("pucSpeedValue taken from test application");
+#endif
         //Comparing with assumed sensor max and min values
         
         if((*pucSpeedValue >= SPEED_SENSOR_MIN) && (*pucSpeedValue <= 
