@@ -20,7 +20,7 @@ pipeline {
             steps {
                 dir('source') {
                     // Running without redirection to see errors in console
-                    sh 'make clean && make > buildlog.txt 2>&1'
+                    sh 'make clean && make'
                 }
             }
         }
