@@ -21,8 +21,8 @@ INCLUDE FILES: MessageQueue.h
 #include <sys/stat.h>
 #include "MessageQueue.h"
 
-#ifndef UNIT_TEST
-#include "HltcMock.h"
+#ifdef UNIT_TEST
+#include "LltcMock.h"
 #endif
 
 /* locals */

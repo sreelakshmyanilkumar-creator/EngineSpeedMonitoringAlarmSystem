@@ -1,4 +1,4 @@
-/* HltcMock.c - test function library */ 
+/* LltcMock.c - test function library */ 
 /* 
 * Copyright (c) 2026 Trenser Technologies Ltd. 
 * 
@@ -10,7 +10,7 @@
 
 #define FLAG_RESET  (0)
 #define FLAG_SET    (1)
-#define MQ_SUCCESS  ()
+#define MQ_SUCCESS  (0)
 #define MQ_FAIL     (-1)
 
 mqd_t mock_mq_open();

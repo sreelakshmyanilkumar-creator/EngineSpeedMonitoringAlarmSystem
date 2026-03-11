@@ -1,4 +1,4 @@
-/* HltcMock.c - test function library */ 
+/* LltcMock.c - test function library */ 
 /* 
 * Copyright (c) 2026 Trenser Technologies Ltd. 
 * 
