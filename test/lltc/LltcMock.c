@@ -9,7 +9,8 @@
 #include <stdbool.h>
 #include "LltcMock.h"
 
-#define MOCK_MQ_HANDLE ((mqd_t)42)
+#define MOCK_MQ_SUCCESS ((mqd_t)42)
+#define MOCK_MQ_FAILURE ((mqd_t)-1)
 
 static bool MQ_Flag = FLAG_RESET;
 
@@ -17,11 +18,11 @@ mqd_t mock_mq_open()
 {
     if(MQ_Flag == FLAG_SET)
     {
-        return MOCK_MQ_HANDLE;
+        return MOCK_MQ_SUCCESS;
     }
     else
     {
-        return (mqd_t)-1;
+        return MOCK_MQ_FAILURE;
     }
 
 }
