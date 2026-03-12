@@ -37,7 +37,7 @@ TEST(SensorRead_LLTC_3, SensorRead_LLTC_NullCheck)
     EXPECT_EQ(SensorRead(pucSpeedValue), false);
 }
 
-TEST(SensorRead_LLTC_4, SensorRead_LLTC_ZeroValue)
+TEST(SensorRead_LLTC_4, SensorRead_LLTC_UINT_MIN)
 {
     uint32_t ucSpeedValue = 0;
     uint32_t *pucSpeedValue = &ucSpeedValue;
@@ -99,6 +99,14 @@ TEST(SensorRead_LLTC_10, SensorRead_LLTC_MiddleValue)
     uint32_t *pucSpeedValue = &ucSpeedValue;
     printf("pucSpeedValue = %d\n",*pucSpeedValue);
     EXPECT_EQ(SensorRead(pucSpeedValue), true);
+}
+
+TEST(SensorRead_LLTC_11, SensorRead_LLTC_UINT_MAX)
+{
+    uint32_t ucSpeedValue = UINT32_MAX;
+    uint32_t *pucSpeedValue = &ucSpeedValue;
+    printf("pucSpeedValue = %d\n",*pucSpeedValue);
+    EXPECT_EQ(SensorRead(pucSpeedValue), false);
 }
 
 
